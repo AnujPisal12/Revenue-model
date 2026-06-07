@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindTwin AI — Revenue Model</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #185FA5;
+    --blue-light: #E6F1FB;
+    --blue-mid: #378ADD;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --pink: #993556;
+    --pink-light: #FBEAF0;
+    --gray-900: #18181b;
+    --gray-800: #27272a;
+    --gray-700: #3f3f46;
+    --gray-600: #52525b;
+    --gray-400: #a1a1aa;
+    --gray-200: #e4e4e7;
+    --gray-100: #f4f4f5;
+    --gray-50: #fafafa;
+    --white: #ffffff;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0d0f12;
+    color: var(--white);
+    min-height: 100vh;
+    padding: 0;
+    line-height: 1.6;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0d0f12 0%, #111827 60%, #0f1f30 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 64px 48px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(24,95,165,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 30%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(29,158,117,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue-mid);
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .hero-title span { color: var(--blue-mid); }
+  .hero-desc {
+    font-size: 16px;
+    color: rgba(255,255,255,0.55);
+    max-width: 560px;
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+  .hero-kpis {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .kpi {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .kpi-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .kpi-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 400;
+  }
+  .kpi-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.1);
+    align-self: stretch;
+  }
+
+  /* ── LAYOUT ── */
+  .page { max-width: 1100px; margin: 0 auto; padding: 56px 48px 80px; }
+
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+    color: var(--white);
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+  .card-sm {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-md);
+    padding: 20px;
+  }
+
+  /* ── CHARTS ROW ── */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+  .chart-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+  .chart-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 20px;
+  }
+  .legend-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── STREAMS ── */
+  .streams-section { margin-bottom: 48px; }
+  .stream-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 80px 140px 130px;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 22px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.025);
+    margin-bottom: 10px;
+    transition: background 0.2s;
+  }
+  .stream-row:hover { background: rgba(255,255,255,0.045); }
+  .stream-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .stream-bar-wrap {
+    height: 6px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .stream-bar { height: 100%; border-radius: 3px; }
+  .stream-pct {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: right;
+  }
+  .stream-scale {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    text-align: right;
+  }
+  .stream-type {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── PRICING ── */
+  .pricing-section { margin-bottom: 48px; }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .pricing-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: var(--radius-lg);
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .pricing-card.featured {
+    border-color: rgba(55,138,221,0.5);
+    background: rgba(24,95,165,0.08);
+  }
+  .pricing-card.featured::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--blue-mid));
+  }
+  .pricing-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(55,138,221,0.15);
+    color: var(--blue-mid);
+    margin-bottom: 16px;
+  }
+  .pricing-tier-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .pricing-price {
+    font-family: 'Syne', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .pricing-unit {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    font-weight: 400;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .pricing-note {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 20px;
+    margin-top: 6px;
+  }
+  .pricing-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.07);
+    margin: 16px 0;
+  }
+  .pricing-feat {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .pricing-feat::before {
+    content: '→';
+    color: rgba(255,255,255,0.2);
+    flex-shrink: 0;
+    font-size: 12px;
+    margin-top: 1px;
+  }
+
+  /* ── PHASES ── */
+  .phases-section { margin-bottom: 48px; }
+  .phases-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .phase-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    position: relative;
+  }
+  .phase-pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .phase-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .phase-rev {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+  .phase-item {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 7px;
+    padding-left: 14px;
+    position: relative;
+  }
+  .phase-item::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: rgba(255,255,255,0.2);
+    font-size: 16px;
+    line-height: 1;
+    top: 1px;
+  }
+
+  /* ── UNIT ECONOMICS ── */
+  .unit-section { margin-bottom: 48px; }
+  .unit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .unit-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+  .unit-sub {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 20px;
+  }
+  .unit-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .unit-metric {
+    background: rgba(255,255,255,0.04);
+    border-radius: var(--radius-md);
+    padding: 14px;
+  }
+  .unit-metric-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 6px;
+  }
+  .unit-metric-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  /* ── INSIGHTS ── */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .insight-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-md);
+    padding: 22px;
+  }
+  .insight-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .insight-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .insight-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 32px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .footer-brand {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.3);
+  }
+  .footer-note {
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  .mb-48 { margin-bottom: 48px; }
+  .mb-20 { margin-bottom: 20px; }
+
+  @media (max-width: 768px) {
+    .hero { padding: 40px 24px; }
+    .page { padding: 40px 24px 60px; }
+    .charts-row { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .phases-grid { grid-template-columns: 1fr; }
+    .unit-grid { grid-template-columns: 1fr; }
+    .insights-grid { grid-template-columns: 1fr; }
+    .stream-row { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+    .hero-kpis { gap: 20px; }
+    .footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">Team Arcane · AI4India · WitchHunt 2025</p>
+  <h1 class="hero-title">MindTwin AI<br><span>Revenue Model</span></h1>
+  <p class="hero-desc">A multi-stream B2B + B2C business model positioning MindTwin as the operating system for every student's academic life — from school timetable to coaching, stress monitoring to learning analytics.</p>
+  <div class="hero-kpis">
+    <div class="kpi">
+      <span class="kpi-value" style="color:#378ADD;">₹1.5 Cr</span>
+      <span class="kpi-label">Year 1 target ARR</span>
+    </div>
+    <div class="kpi-divider"></div>
+    <div class="kpi">
+      <span class="kpi-value" style="color:#1D9E75;">₹18 Cr</span>
+      <span class="kpi-label">Year 3 target ARR</span>
+    </div>
+    <div class="kpi-divider"></div>
+    <div class="kpi">
+      <span class="kpi-value" style="color:#BA7517;">₹100 Cr+</span>
+      <span class="kpi-label">North Star ARR</span>
+    </div>
+    <div class="kpi-divider"></div>
+    <div class="kpi">
+      <span class="kpi-value">1 Cr+</span>
+      <span class="kpi-label">Students by 2030</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="page">
+
+  <!-- REVENUE MIX + GROWTH CHARTS -->
+  <div class="mb-48">
+    <p class="section-label">Revenue overview</p>
+    <p class="section-title">Revenue mix & projected growth</p>
+    <div class="charts-row">
+      <div class="chart-card">
+        <p class="chart-title">Target revenue mix</p>
+        <div class="legend-row">
+          <span class="legend-item"><span class="legend-dot" style="background:#185FA5;"></span>Institutional SaaS</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#1D9E75;"></span>Student subs</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#BA7517;"></span>EdTech integrations</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#993556;"></span>Marketplace</span>
+        </div>
+        <div style="position:relative;height:220px;">
+          <canvas id="mixChart" role="img" aria-label="Donut chart: Institutional SaaS 40%, Student subscriptions 30%, EdTech integrations 20%, Marketplace 10%">Revenue mix at scale: Institutional SaaS 40%, Student subscriptions 30%, EdTech integrations 20%, Marketplace 10%.</canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <p class="chart-title">Projected ARR growth (₹ Crore)</p>
+        <div class="legend-row">
+          <span class="legend-item"><span class="legend-dot" style="background:#185FA5;"></span>Institutional SaaS</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#1D9E75;"></span>Student subs</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#BA7517;"></span>EdTech integrations</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#993556;"></span>Marketplace</span>
+        </div>
+        <div style="position:relative;height:220px;">
+          <canvas id="growthChart" role="img" aria-label="Stacked bar chart of ARR growth from Year 1 to Year 5">ARR growth: Y1 1.5 Cr, Y2 6 Cr, Y3 18 Cr, Y4 50 Cr, Y5 100+ Cr.</canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVENUE STREAMS -->
+  <div class="streams-section">
+    <p class="section-label">Revenue breakdown</p>
+    <p class="section-title">Six revenue streams</p>
+
+    <div class="stream-row">
+      <span class="stream-name">Institutional SaaS</span>
+      <div class="stream-bar-wrap"><div class="stream-bar" style="width:40%;background:#185FA5;"></div></div>
+      <span class="stream-pct" style="color:#378ADD;">40%</span>
+      <span class="stream-scale">₹40 Cr at scale</span>
+      <span class="stream-type" style="background:rgba(24,95,165,0.15);color:#378ADD;">B2B anchor</span>
+    </div>
+    <div class="stream-row">
+      <span class="stream-name">Student subscriptions</span>
+      <div class="stream-bar-wrap"><div class="stream-bar" style="width:30%;background:#1D9E75;"></div></div>
+      <span class="stream-pct" style="color:#1D9E75;">30%</span>
+      <span class="stream-scale">₹30 Cr at scale</span>
+      <span class="stream-type" style="background:rgba(29,158,117,0.15);color:#1D9E75;">B2C core</span>
+    </div>
+    <div class="stream-row">
+      <span class="stream-name">EdTech integrations</span>
+      <div class="stream-bar-wrap"><div class="stream-bar" style="width:20%;background:#BA7517;"></div></div>
+      <span class="stream-pct" style="color:#BA7517;">20%</span>
+      <span class="stream-scale">₹20 Cr at scale</span>
+      <span class="stream-type" style="background:rgba(186,117,23,0.15);color:#BA7517;">Platform play</span>
+    </div>
+    <div class="stream-row">
+      <span class="stream-name">AI Insights (B2B analytics)</span>
+      <div class="stream-bar-wrap"><div class="stream-bar" style="width:5%;background:#5DCAA5;"></div></div>
+      <span class="stream-pct" style="color:#5DCAA5;">—</span>
+      <span class="stream-scale">Bundled in SaaS</span>
+      <span class="stream-type" style="background:rgba(93,202,165,0.12);color:#5DCAA5;">Upsell</span>
+    </div>
+    <div class="stream-row">
+      <span class="stream-name">Marketplace</span>
+      <div class="stream-bar-wrap"><div class="stream-bar" style="width:10%;background:#993556;"></div></div>
+      <span class="stream-pct" style="color:#993556;">10%</span>
+      <span class="stream-scale">₹10 Cr at scale</span>
+      <span class="stream-type" style="background:rgba(153,53,86,0.15);color:#993556;">Phase 3+</span>
+    </div>
+    <div class="stream-row">
+      <span class="stream-name">Enterprise white-label</span>
+      <div class="stream-bar-wrap"><div class="stream-bar" style="width:15%;background:#7F77DD;"></div></div>
+      <span class="stream-pct" style="color:#7F77DD;">—</span>
+      <span class="stream-scale">High-value contracts</span>
+      <span class="stream-type" style="background:rgba(127,119,221,0.15);color:#7F77DD;">Enterprise</span>
+    </div>
+  </div>
+
+  <!-- PRICING TIERS -->
+  <div class="pricing-section">
+    <p class="section-label">Pricing architecture</p>
+    <p class="section-title">Tiers designed for every stakeholder</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <p class="pricing-tier-label">Student — Basic</p>
+        <p class="pricing-price">₹99–149 <span class="pricing-unit">/month</span></p>
+        <p class="pricing-note">Freemium → paid conversion funnel</p>
+        <div class="pricing-divider"></div>
+        <p class="pricing-feat">AI digital twin (basic)</p>
+        <p class="pricing-feat">Personalized study planner</p>
+        <p class="pricing-feat">Stress & mood tracker</p>
+        <p class="pricing-feat">Learning gap detection</p>
+      </div>
+      <div class="pricing-card featured">
+        <span class="pricing-badge">Most popular</span>
+        <p class="pricing-tier-label">Student — Pro</p>
+        <p class="pricing-price">₹299–499 <span class="pricing-unit">/month</span></p>
+        <p class="pricing-note">Core B2C revenue driver</p>
+        <div class="pricing-divider"></div>
+        <p class="pricing-feat">Full adaptive quiz engine (IRT)</p>
+        <p class="pricing-feat">Burnout prediction & alerts</p>
+        <p class="pricing-feat">Focus token reward system</p>
+        <p class="pricing-feat">Exam countdown & revision priority</p>
+        <p class="pricing-feat">LLM-powered concept tutoring</p>
+      </div>
+      <div class="pricing-card">
+        <p class="pricing-tier-label">School / Coaching SaaS</p>
+        <p class="pricing-price">₹50–200 <span class="pricing-unit">/student/month</span></p>
+        <p class="pricing-note">B2B — highest LTV, stickiest revenue</p>
+        <div class="pricing-divider"></div>
+        <p class="pricing-feat">Teacher + parent dashboards</p>
+        <p class="pricing-feat">Cohort-level burnout prediction</p>
+        <p class="pricing-feat">Dropout & underperformance alerts</p>
+        <p class="pricing-feat">Institution-level analytics</p>
+        <p class="pricing-feat">LMS / Google Classroom integration</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASES -->
+  <div class="phases-section">
+    <p class="section-label">Rollout plan</p>
+    <p class="section-title">From MVP to North Star — in three phases</p>
+    <div class="phases-grid">
+      <div class="phase-card">
+        <span class="phase-pill" style="background:rgba(24,95,165,0.15);color:#378ADD;">Phase 1 · 0–9 months</span>
+        <p class="phase-name">Validate & seed</p>
+        <p class="phase-rev" style="color:#378ADD;">₹1.5 Cr ARR</p>
+        <p class="phase-item">Launch Student Pro subscriptions</p>
+        <p class="phase-item">Pilot 2–5 schools at ₹100/student/mo</p>
+        <p class="phase-item">Free tier as acquisition funnel</p>
+        <p class="phase-item">Collect feedback from 20–50 students</p>
+        <p class="phase-item">IRT model calibration with real data</p>
+      </div>
+      <div class="phase-card">
+        <span class="phase-pill" style="background:rgba(29,158,117,0.15);color:#1D9E75;">Phase 2 · 9–18 months</span>
+        <p class="phase-name">Scale B2B</p>
+        <p class="phase-rev" style="color:#1D9E75;">₹6–18 Cr ARR</p>
+        <p class="phase-item">Onboard 50–100 school licenses</p>
+        <p class="phase-item">EdTech API integrations (PW, Unacademy)</p>
+        <p class="phase-item">Annual coaching chain contracts</p>
+        <p class="phase-item">Teacher dashboard live</p>
+        <p class="phase-item">Multi-subject knowledge graph expansion</p>
+      </div>
+      <div class="phase-card">
+        <span class="phase-pill" style="background:rgba(186,117,23,0.15);color:#BA7517;">Phase 3 · 18+ months</span>
+        <p class="phase-name">Platform & marketplace</p>
+        <p class="phase-rev" style="color:#BA7517;">₹50–100 Cr ARR</p>
+        <p class="phase-item">White-label licensing to PW / Allen / Aakash</p>
+        <p class="phase-item">Tutor / mentor marketplace (10–20% take rate)</p>
+        <p class="phase-item">NCERT / state board partnerships</p>
+        <p class="phase-item">Multi-language support (Hindi, regional)</p>
+        <p class="phase-item">Wearable integration, JEE / NEET tracks</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNIT ECONOMICS -->
+  <div class="unit-section">
+    <p class="section-label">Unit economics</p>
+    <p class="section-title">Key metrics per business line</p>
+    <div class="unit-grid">
+      <div class="unit-card">
+        <p class="unit-sub" style="color:rgba(55,138,221,0.6);">B2C — Student Pro</p>
+        <div class="unit-metrics">
+          <div class="unit-metric">
+            <p class="unit-metric-label">ARPU / month</p>
+            <p class="unit-metric-value" style="color:#378ADD;">₹399</p>
+          </div>
+          <div class="unit-metric">
+            <p class="unit-metric-label">LTV (12 months)</p>
+            <p class="unit-metric-value" style="color:#378ADD;">₹4.8K</p>
+          </div>
+          <div class="unit-metric">
+            <p class="unit-metric-label">CAC target</p>
+            <p class="unit-metric-value">₹600</p>
+          </div>
+          <div class="unit-metric">
+            <p class="unit-metric-label">LTV : CAC ratio</p>
+            <p class="unit-metric-value" style="color:#1D9E75;">8×</p>
+          </div>
+        </div>
+      </div>
+      <div class="unit-card">
+        <p class="unit-sub" style="color:rgba(29,158,117,0.6);">B2B — School SaaS (1,000 students)</p>
+        <div class="unit-metrics">
+          <div class="unit-metric">
+            <p class="unit-metric-label">ACV per school</p>
+            <p class="unit-metric-value" style="color:#1D9E75;">₹12L</p>
+          </div>
+          <div class="unit-metric">
+            <p class="unit-metric-label">Renewal rate target</p>
+            <p class="unit-metric-value" style="color:#1D9E75;">85%</p>
+          </div>
+          <div class="unit-metric">
+            <p class="unit-metric-label">Sales cycle</p>
+            <p class="unit-metric-value">6–8 wk</p>
+          </div>
+          <div class="unit-metric">
+            <p class="unit-metric-label">Gross margin</p>
+            <p class="unit-metric-value" style="color:#1D9E75;">70%+</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRATEGIC INSIGHTS -->
+  <div class="mb-48">
+    <p class="section-label">Strategic notes</p>
+    <p class="section-title">Why this model works</p>
+    <div class="insights-grid">
+      <div class="insight-card">
+        <p class="insight-number" style="color:#378ADD;">40%</p>
+        <p class="insight-title">Institutional SaaS is the biggest bet</p>
+        <p class="insight-desc">One school with 1,000 students at ₹100/student/month = ₹12L/year from a single contract. Fewer customers, higher LTV, stickier retention.</p>
+      </div>
+      <div class="insight-card">
+        <p class="insight-number" style="color:#1D9E75;">Free</p>
+        <p class="insight-title">B2C freemium drives B2B sales</p>
+        <p class="insight-desc">Students on the free tier become proof points for school deals. A student improving scores with MindTwin is the most effective enterprise sales tool.</p>
+      </div>
+      <div class="insight-card">
+        <p class="insight-number" style="color:#BA7517;">OS</p>
+        <p class="insight-title">EdTech integrations = the real moat</p>
+        <p class="insight-desc">Becoming the orchestration layer on top of PW, Unacademy, and Allen — reading schedules, detecting gaps, personalizing revision — without acquiring their students.</p>
+      </div>
+      <div class="insight-card">
+        <p class="insight-number" style="color:#993556;">50K+</p>
+        <p class="insight-title">Marketplace is last-mile monetization</p>
+        <p class="insight-desc">Don't build it before you have 50K+ active students. The 10–20% take rate on tutor / mentor sessions compounds nicely at scale but has near-zero value before then.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROWTH PROJECTION TABLE -->
+  <div class="mb-48">
+    <p class="section-label">5-year projection</p>
+    <p class="section-title">Revenue by stream (₹ Crore)</p>
+    <div class="card" style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+            <th style="text-align:left;padding:10px 14px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-weight:500;">Revenue stream</th>
+            <th style="text-align:right;padding:10px 14px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-weight:500;">Year 1</th>
+            <th style="text-align:right;padding:10px 14px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-weight:500;">Year 2</th>
+            <th style="text-align:right;padding:10px 14px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-weight:500;">Year 3</th>
+            <th style="text-align:right;padding:10px 14px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-weight:500;">Year 4</th>
+            <th style="text-align:right;padding:10px 14px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-weight:500;">Year 5</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:12px 14px;"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#185FA5;margin-right:8px;vertical-align:middle;"></span>Institutional SaaS</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">0.6</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">2.4</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">7.2</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">20</td>
+            <td style="text-align:right;padding:12px 14px;font-weight:600;color:#378ADD;">40</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:12px 14px;"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#1D9E75;margin-right:8px;vertical-align:middle;"></span>Student subscriptions</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">0.6</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">1.8</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">5.4</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">15</td>
+            <td style="text-align:right;padding:12px 14px;font-weight:600;color:#1D9E75;">30</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:12px 14px;"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#BA7517;margin-right:8px;vertical-align:middle;"></span>EdTech integrations</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">0.2</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">1.2</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">3.6</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">10</td>
+            <td style="text-align:right;padding:12px 14px;font-weight:600;color:#BA7517;">20</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:12px 14px;"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#993556;margin-right:8px;vertical-align:middle;"></span>Marketplace & other</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">0.1</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">0.6</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">1.8</td>
+            <td style="text-align:right;padding:12px 14px;color:rgba(255,255,255,0.5);">5</td>
+            <td style="text-align:right;padding:12px 14px;font-weight:600;color:#993556;">10</td>
+          </tr>
+          <tr style="background:rgba(255,255,255,0.03);">
+            <td style="padding:14px 14px;font-weight:600;font-family:'Syne',sans-serif;font-size:14px;">Total ARR</td>
+            <td style="text-align:right;padding:14px 14px;font-weight:700;font-family:'Syne',sans-serif;">1.5</td>
+            <td style="text-align:right;padding:14px 14px;font-weight:700;font-family:'Syne',sans-serif;">6</td>
+            <td style="text-align:right;padding:14px 14px;font-weight:700;font-family:'Syne',sans-serif;">18</td>
+            <td style="text-align:right;padding:14px 14px;font-weight:700;font-family:'Syne',sans-serif;">50</td>
+            <td style="text-align:right;padding:14px 14px;font-weight:700;font-family:'Syne',sans-serif;color:#378ADD;font-size:16px;">100</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:11px;color:rgba(255,255,255,0.2);padding:8px 14px 0;">All figures in ₹ Crore. Projections are targets based on assumed growth rates and market conditions.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div style="border-top:1px solid rgba(255,255,255,0.06);max-width:1100px;margin:0 auto;padding:28px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+  <span style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:rgba(255,255,255,0.25);">MindTwin AI</span>
+  <span style="font-size:12px;color:rgba(255,255,255,0.18);">Team Arcane · AI4India · WitchHunt · Revenue Model 2025</span>
+</div>
+
+<script>
+new Chart(document.getElementById('mixChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Institutional SaaS', 'Student subscriptions', 'EdTech integrations', 'Marketplace & other'],
+    datasets: [{
+      data: [40, 30, 20, 10],
+      backgroundColor: ['#185FA5','#1D9E75','#BA7517','#993556'],
+      borderWidth: 3,
+      borderColor: '#0d0f12',
+      hoverBorderColor: '#0d0f12'
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '68%',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ' ' + ctx.label + ': ' + ctx.raw + '%'
+        }
+      }
+    }
+  }
+});
+
+new Chart(document.getElementById('growthChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+    datasets: [
+      { label: 'Institutional SaaS', data: [0.6, 2.4, 7.2, 20, 40], backgroundColor: '#185FA5' },
+      { label: 'Student subs', data: [0.6, 1.8, 5.4, 15, 30], backgroundColor: '#1D9E75' },
+      { label: 'EdTech integrations', data: [0.2, 1.2, 3.6, 10, 20], backgroundColor: '#BA7517' },
+      { label: 'Marketplace', data: [0.1, 0.6, 1.8, 5, 10], backgroundColor: '#993556' }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: {
+        stacked: true,
+        ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 12, family: "'DM Sans', sans-serif" } },
+        grid: { display: false },
+        border: { color: 'rgba(255,255,255,0.1)' }
+      },
+      y: {
+        stacked: true,
+        ticks: {
+          color: 'rgba(255,255,255,0.35)',
+          font: { size: 11, family: "'DM Sans', sans-serif" },
+          callback: v => '₹' + v + ' Cr'
+        },
+        grid: { color: 'rgba(255,255,255,0.05)' },
+        border: { color: 'transparent' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
